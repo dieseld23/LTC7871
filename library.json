@@ -1,0 +1,16 @@
+{
+    "name": "LTC7871",
+    "keywords": "LTC, LTC7871",
+    "description": "Arduino Library for the LTC7871 Chip from TI",
+    "authors": [{
+        "name": "Dan Maslach",
+        "email": "dmaslach@gmail.com",
+        "maintainer": true
+    }],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/dieseld23/LTC7871"
+    },
+    "version": "0.1.0",
+    "frameworks": "arduino"
+}
