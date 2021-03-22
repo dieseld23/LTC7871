@@ -1,3 +1,3 @@
 # LTC7871
 
-Arduino Libary for the LTC7871 Chip from TI.
+Arduino Library for Analog Devices LTC7871 - Six-Phase, Synchronous Bidirectional bBuck or Boost Controller
