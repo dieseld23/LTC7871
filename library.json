@@ -1,7 +1,7 @@
 {
     "name": "LTC7871",
     "keywords": "LTC, LTC7871",
-    "description": "Arduino Library for the LTC7871 Chip from TI",
+    "description": "Arduino Library for Analog Devices LTC7871 - Six-Phase, Synchronous Bidirectional Buck or Boost Controller",
     "authors": [{
         "name": "Dan Maslach",
         "email": "dmaslach@gmail.com",
