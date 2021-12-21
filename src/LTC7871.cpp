@@ -47,15 +47,26 @@ void LTC7871::begin() {
 	digitalWrite(cs, HIGH);
 }
 
-uint8_t LTC7871::PEC(int8_t data) {
-	uint8_t PECa[8] = {0, 1, 0, 0, 0, 0, 0, 1}; //0x01000001;
-	uint8_t DIN[8] = {0};
+uint8_t LTC7871::PEC(uint16_t data) {
+   	byte crc_init = 0x41;
+   
+	uint8_t addr = data >> 8;
+	uint8_t datab = data & 0xFF;
+	uint8_t x = crc_init ^ addr;
+
+	uint8_t PEC = crcTable[x >> 4][x & 0xF];
+	
+	x = PEC ^ datab;
+	PEC = crcTable[x >> 4][x & 0xF];
+/*
+	// Conversion in datasheet, now using lookup table to speed things up
+	uint16_t PECa[8] = {1, 0, 0, 0, 0, 0, 1, 0}; //0x01000001, reversed;
+	uint16_t DIN[8] = {0};
 	uint8_t IN0 = 0;
 	uint8_t IN1 = 0;
 	uint8_t IN2 = 0;
-
 	for (int j = 0; j <= 7; j++) {
-		DIN[j] = bitRead(data, 7 - j);
+		DIN[j] = bitRead(data,7-j);
 
 		IN0 = DIN[j] ^ PECa[7];
 		IN1 = PECa[0] ^ IN0;
@@ -63,16 +74,19 @@ uint8_t LTC7871::PEC(int8_t data) {
 
 		PECa[7] = PECa[6];
 		PECa[6] = PECa[5];
+		PECa[5] = PECa[4];
 		PECa[4] = PECa[3];
 		PECa[3] = PECa[2];
 		PECa[2] = IN2;
 		PECa[1] = IN1;
 		PECa[0] = IN0;
+
 	}
+
 	uint8_t PEC = 0;
 	for (int i = 0; i <= 7; i++) {
-		bitWrite(PEC, i, PECa[7 - i]);
-	}
+		bitWrite(PEC, i, PECa[i]);
+	}*/
 
 	return PEC;
 }
@@ -342,7 +356,7 @@ void LTC7871::writeData(uint8_t reg, int8_t data) {
 	uint8_t CRC = PEC(data);
 	digitalWrite(cs, LOW);
 	delayMicroseconds(10);
-	SPI.beginTransaction(SPISettings(SCLK, MSBFIRST, SPI_MODE1));
+	SPI.beginTransaction(SPISettings(SCLK, MSBFIRST, SPI_MODE0));
 	SPI.transfer(reg << 1 | WRITE);
 	SPI.transfer(data);
 	SPI.transfer(CRC);
@@ -352,14 +366,62 @@ void LTC7871::writeData(uint8_t reg, int8_t data) {
 }
 
 uint8_t LTC7871::readData(uint8_t reg) {
+	//Serial.print("Read: 0b");
+	//Serial.println(reg,BIN);
+	//Serial.print("Read: 0b");
+	//Serial.println(reg << 1 | READ,BIN);
+
+
+	SPI.beginTransaction(SPISettings(SCLK, MSBFIRST, SPI_MODE0));
 	digitalWrite(cs, LOW);
-	delayMicroseconds(10);
-	SPI.beginTransaction(SPISettings(SCLK, MSBFIRST, SPI_MODE1));
-	uint8_t retData = SPI.transfer(reg << 1 | READ);
-	SPI.endTransaction();
+	delayMicroseconds(5);
+	reg = (reg << 1 | READ);
+	SPI.transfer(reg);
+	uint8_t retData = SPI.transfer(0);
+	uint8_t CRC = SPI.transfer(0);
+	delayMicroseconds(5);
 	digitalWrite(cs, HIGH);
-	delayMicroseconds(10);
-	return retData;
+	//delayMicroseconds(10);
+	SPI.endTransaction();
+
+	if (PEC((reg << 8) + retData) != CRC) {
+		Serial.println("CRC Mismatch!");
+	};
+/*
+Serial.print("Address: 0b");
+ for(int i = 7; i >= 0; i--) {
+    	Serial.print(bitRead(reg << 1 | READ, i));
+    }
+Serial.println();
+Serial.print("AddressCRC: 0b");
+uint8_t PECCRC = PEC(reg << 1 | READ);
+ for(int i = 7; i >= 0; i--) {
+    	Serial.print(bitRead(PECCRC, i));
+    }
+Serial.println();
+	Serial.print("Data: 0b");
+    for(int i = 7; i >= 0; i--) {
+    	Serial.print(bitRead(retData, i));
+    }
+	//	Serial.print(bitRead(retData, i));
+	Serial.println();
+
+	//Serial.println(retData,BIN);
+	Serial.print("CRC: 0b");
+	for(int i = 7; i >= 0; i--) {
+    	Serial.print(bitRead(CRC, i));
+    }
+	Serial.println();
+
+
+Serial.print("Calc_CRC: 0b");
+	for(int i = 7; i >= 0; i--) {
+    	Serial.print(bitRead(PEC(retData), i));
+    }
+	//Serial.println(PEC(retData),BIN);
+	Serial.println();
+	//Serial.println(CRC,BIN);
+	return retData;*/
 }
 
 /*
