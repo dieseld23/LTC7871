@@ -56,7 +56,7 @@ public:
 	uint8_t getCur();
 	void setIDACVlow(int8_t setPt = 0);
 	void setIDACVhigh(int8_t setPt = 0);
-	void setCur(int8_t setPt = 0);
+	void setCur(uint8_t setPt = 0);
 	void setCML(bool set);
 	void setReset(bool set);
 	void setWriteProtect(bool set);
@@ -102,7 +102,7 @@ private:
 									{0xDE, 0xD9, 0xD0, 0xD7, 0xC2, 0xC5, 0xCC, 0xCB, 0xE6, 0xE1, 0xE8, 0xEF, 0xFA, 0xFD, 0xF4, 0xF3}};
 
     uint8_t readData(uint8_t reg);
-    void writeData(uint8_t reg, int8_t data);
+    void writeData(uint8_t reg, uint8_t data);
     uint8_t PEC(uint16_t data);
 };
 
