@@ -301,7 +301,8 @@ uint8_t LTC7871::getCur() {
 	} else {
 		ret = ret + 16;
 	}
-
+	Serial.print("getCur: ");
+	Serial.println(ret,BIN);
 	return ret;
 }
 
@@ -314,7 +315,7 @@ void LTC7871::setCur(uint8_t setPt) {
 	}
 		
 	if (setPt >= 16) {
-		setPt = (~setPt + 1) & 0b00001111;
+		setPt = setPt & 0b00001111;
 	}
 	else {
 		setPt = (setPt & 0b00001111) | 0b00010000;
