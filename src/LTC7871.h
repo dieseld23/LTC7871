@@ -38,6 +38,20 @@
 #define READ 1
 #define WRITE 0
 
+#define freq512 0b000
+#define freq1024 0b001
+#define freq2048 0b010
+#define freq4096 0b011
+#define freq256 0b100
+#define freq128 0b101
+#define freq164 0b110
+#define free512_2 0b111
+
+#define percent12 0b00
+#define percent15 0b01
+#define percentten 0b10
+#define percent8 0b11
+
 class LTC7871 {
 public:
 	LTC7871(uint8_t chipSelect);
@@ -57,11 +71,10 @@ public:
 	void setIDACVlow(int8_t setPt = 0);
 	void setIDACVhigh(int8_t setPt = 0);
 	void setCur(uint8_t setPt = 0);
-	void setCML(bool set);
-	void setReset(bool set);
+	void setCML();
+	void setReset();
 	void setWriteProtect(bool set);
-	void setFreqSpread(uint8_t freq);
-	void setModSigFreq(uint16_t modFreq);
+	void setSSFM(uint8_t data);
 
 	//Bit constant
 	const long int SCLK = 1000000; //  SCLK frequency - Max is 5Mhz

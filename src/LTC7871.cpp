@@ -216,7 +216,7 @@ uint8_t LTC7871::getConfig1() {
 	} else if ((ret & 0b00011000) == 0b00010000) {
 		Serial.print("DRVcc is 10V; ");
 	}
-	if (bitRead(ret, 5)) {
+	if ((ret & 0b00100000) == 0b00100000) {
 		Serial.print("SETCUR set above 1.25V; ");
 	}
 	Serial.println();
@@ -276,6 +276,12 @@ int8_t LTC7871::getIDACVlow() {
 }
 
 void LTC7871::setIDACVlow(int8_t setPt) {
+	if (setPt > 63) {
+		setPt = 63;
+	}
+	else if (setPt < -64) {
+		setPt = -64;
+	}
 	writeData(MFR_IDAC_VLOW, setPt);
 }
 
@@ -290,6 +296,12 @@ int8_t LTC7871::getIDACVhigh() {
 }
 
 void LTC7871::setIDACVhigh(int8_t setPt) {
+	if (setPt > 63) {
+		setPt = 63;
+	}
+	else if (setPt < -64) {
+		setPt = -64;
+	}
 	writeData(MFR_IDAC_VHIGH, setPt);
 }
 
@@ -301,8 +313,6 @@ uint8_t LTC7871::getCur() {
 	} else {
 		ret = ret + 16;
 	}
-	Serial.print("getCur: ");
-	Serial.println(ret,BIN);
 	return ret;
 }
 
@@ -324,61 +334,55 @@ void LTC7871::setCur(uint8_t setPt) {
 }
 
 uint8_t LTC7871::getSSFM() {
-	uint8_t ret = readData(MFR_IDAC_VHIGH);
+	uint8_t ret = readData(MFR_SSFM);
 
 	if ((ret & 0b00000111) == 0b00000000 || (ret & 0b00000111) == 0b00000111) {
-		Serial.print("Sw. Freq / 512;");
+		Serial.print("Sw. Freq / 512; ");
 	} else if ((ret & 0b00000111) == 0b00000001) {
-		Serial.print("Sw. Freq / 1024;");
+		Serial.print("Sw. Freq / 1024; ");
 	} else if ((ret & 0b00000111) == 0b00000010) {
-		Serial.print("Sw. Freq / 2048;");
+		Serial.print("Sw. Freq / 2048; ");
 	} else if ((ret & 0b00000111) == 0b00000011) {
-		Serial.print("Sw. Freq / 4096;");
+		Serial.print("Sw. Freq / 4096; ");
 	} else if ((ret & 0b00000111) == 0b00000100) {
-		Serial.print("Sw. Freq / 256;");
+		Serial.print("Sw. Freq / 256; ");
 	} else if ((ret & 0b00000111) == 0b00000101) {
-		Serial.print("Sw. Freq / 128;");
+		Serial.print("Sw. Freq / 128; ");
 	} else if ((ret & 0b00000111) == 0b00000110) {
-		Serial.print("Sw. Freq / 64;");
+		Serial.print("Sw. Freq / 64; ");
 	}
 	if ((ret & 0b00011000) == 0b00000000) {
-		Serial.print("±12%;");
-	} else if ((ret & 0b00011000) == 0b00000001) {
-		Serial.print("±15%;");
-	} else if ((ret & 0b00011000) == 0b00000010) {
-		Serial.print("±10%;");
-	} else if ((ret & 0b00011000) == 0b00000011) {
-		Serial.print("±8%;");
+		Serial.print("±12%; ");
+	} else if ((ret & 0b00011000) == 0b00001000) {
+		Serial.print("±15%; ");
+	} else if ((ret & 0b00011000) == 0b00010010) {
+		Serial.print("±10%; ");
+	} else if ((ret & 0b00011000) == 0b00011000) {
+		Serial.print("±8%; ");
 	}
 	Serial.println();
 	return ret;
 }
 
-void LTC7871::setCML(bool set) {
+void LTC7871::setCML() {
 	uint8_t data = 0b00000100;
 	writeData(MFR_CHIP_CTRL, data);
 }
 
-void LTC7871::setReset(bool set) {
+void LTC7871::setReset() {
 	uint8_t data = 0b00000010;
 	writeData(MFR_CHIP_CTRL, data);
 }
 
 void LTC7871::setWriteProtect(bool set) {
-	uint8_t data = 0b00000000;
-	if (set == true) {
-		data = 0b00000001;
-	}
-	writeData(MFR_CHIP_CTRL, data);
+	writeData(MFR_CHIP_CTRL, (uint8_t)set);
 }
 
-void LTC7871::setFreqSpread(uint8_t freq) {
-	//writeData(MFR_SSFM, )
+void LTC7871::setSSFM(uint8_t data) {
+	writeData(MFR_SSFM, data);
 }
 
-void LTC7871::setModSigFreq(uint16_t modFreq) {
-	//writeData(MFR_SSFM, ....)
-}
+
 
 void LTC7871::writeData(uint8_t reg, uint8_t data) {
 	uint8_t CRC = PEC((((reg << 1) | WRITE) << 8) + data);
