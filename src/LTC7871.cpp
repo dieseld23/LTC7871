@@ -93,58 +93,59 @@ uint8_t LTC7871::PEC(uint16_t data) {
 
 uint8_t LTC7871::getFaults() {
 	uint8_t ret = readData(MFR_FAULT);
-	
-	if (ret != 0) {
-		if (ret & 0b00000001) {
-			Serial.print("Over Temp; ");
+	if (ret != 0xFF) {
+		if (ret != 0) {
+			if (ret & 0b00000001) {
+				Serial.print("Over Temp; ");
+			}
+			if (ret & 0b00000010) {
+				Serial.print("Vref Fault; ");
+			}
+			if (ret & 0b00000100) {
+				Serial.print("V5 Undervoltage; ");
+			}
+			if (ret & 0b00001000) {
+				Serial.print("DRVcc Pin Undervoltage; ");
+			}
+			if (ret & 0b00010000) {
+				Serial.print("UVhigh < 1.2V; ");
+			}
+			if (ret & 0b00100000) {
+				Serial.print("OVhigh > 1.2V; ");
+			}
+			if (ret & 0b01000000) {
+				Serial.print("OVlow > 1.2V; ");
+			}
+		Serial.println();
 		}
-		if (ret & 0b00000010) {
-			Serial.print("Vref Fault; ");
-		}
-		if (ret & 0b00000100) {
-			Serial.print("V5 Undervoltage; ");
-		}
-		if (ret & 0b00001000) {
-			Serial.print("DRVcc Pin Undervoltage; ");
-		}
-		if (ret & 0b00010000) {
-			Serial.print("UVhigh < 1.2V; ");
-		}
-		if (ret & 0b00100000) {
-			Serial.print("OVhigh > 1.2V; ");
-		}
-		if (ret & 0b01000000) {
-			Serial.print("OVlow > 1.2V; ");
-		}
-	Serial.println();
 	}
-	
 	return ret;
 }
 
 uint8_t LTC7871::getOCFaults() {
 	uint8_t ret = readData(MFR_OC_FAULT);
-	
-	if (ret != 0) {
-		if (ret & 0b00000001) {
-			Serial.print("Overcurrent Channel 1; ");
+	if (ret != 0xFF) {
+		if (ret != 0) {
+			if (ret & 0b00000001) {
+				Serial.print("Overcurrent Channel 1; ");
+			}
+			if (ret & 0b00000010) {
+				Serial.print("Overcurrent Channel 2; ");
+			}
+			if (ret & 0b00000100) {
+				Serial.print("Overcurrent Channel 3; ");
+			}
+			if (ret & 0b00001000) {
+				Serial.print("Overcurrent Channel 4; ");
+			}
+			if (ret & 0b00010000) {
+				Serial.print("Overcurrent Channel 5; ");
+			}
+			if (ret & 0b00100000) {
+				Serial.print("Overcurrent Channel 6; ");
+			}
+			Serial.println();
 		}
-		if (ret & 0b00000010) {
-			Serial.print("Overcurrent Channel 2; ");
-		}
-		if (ret & 0b00000100) {
-			Serial.print("Overcurrent Channel 3; ");
-		}
-		if (ret & 0b00001000) {
-			Serial.print("Overcurrent Channel 4; ");
-		}
-		if (ret & 0b00010000) {
-			Serial.print("Overcurrent Channel 5; ");
-		}
-		if (ret & 0b00100000) {
-			Serial.print("Overcurrent Channel 6; ");
-		}
-		Serial.println();
 	}
 	return ret;
 }
@@ -152,44 +153,47 @@ uint8_t LTC7871::getOCFaults() {
 uint8_t LTC7871::getNOCFaults() {
 	uint8_t ret = readData(MFR_NOC_FAULT);
 
-	if (ret != 0) {
-		if (ret & 0b00000001) {
-			Serial.print("Negative Overcurrent Channel 1; ");
+	if (ret != 0xFF) {
+		if (ret != 0) {
+			if (ret & 0b00000001) {
+				Serial.print("Negative Overcurrent Channel 1; ");
+			}
+			if (ret & 0b00000010) {
+				Serial.print("Negative Overcurrent Channel 2; ");
+			}
+			if (ret & 0b00000100) {
+				Serial.print("Negative Overcurrent Channel 3; ");
+			}
+			if (ret & 0b00001000) {
+				Serial.print("Negative Overcurrent Channel 4; ");
+			}
+			if (ret & 0b00010000) {
+				Serial.print("Negative Overcurrent Channel 5; ");
+			}
+			if (ret & 0b00100000) {
+				Serial.print("Negative Overcurrent Channel 6; ");
+			}
+			Serial.println();
 		}
-		if (ret & 0b00000010) {
-			Serial.print("Negative Overcurrent Channel 2; ");
-		}
-		if (ret & 0b00000100) {
-			Serial.print("Negative Overcurrent Channel 3; ");
-		}
-		if (ret & 0b00001000) {
-			Serial.print("Negative Overcurrent Channel 4; ");
-		}
-		if (ret & 0b00010000) {
-			Serial.print("Negative Overcurrent Channel 5; ");
-		}
-		if (ret & 0b00100000) {
-			Serial.print("Negative Overcurrent Channel 6; ");
-		}
-		Serial.println();
 	}
 	return ret;
 }
 
 uint8_t LTC7871::getStatus() {
 	uint8_t ret = readData(MFR_STATUS);
-	
-	if (ret != 0) {
-		if (ret & 0b00000001) {
-			Serial.print("Vlow/Vhigh within 10% regulation; ");
+	if (ret != 0xFF) {
+		if (ret != 0) {
+			if (ret & 0b00000001) {
+				Serial.print("Vlow/Vhigh within 10% regulation; ");
+			}
+			if (ret & 0b00000010) {
+				Serial.print("Ilim Reached; ");
+			}
+			if (ret & 0b00000100) {
+				Serial.print("Soft-start Finished; ");
+			}
+			Serial.println();
 		}
-		if (ret & 0b00000010) {
-			Serial.print("Ilim Reached; ");
-		}
-		if (ret & 0b00000100) {
-			Serial.print("Soft-start Finished; ");
-		}
-		Serial.println();
 	}
 	return ret;
 }
@@ -197,71 +201,74 @@ uint8_t LTC7871::getStatus() {
 uint8_t LTC7871::getConfig1() {
 	uint8_t ret = readData(MFR_CONFIG1);
 	
-	
-	if ((ret & 0b00000111) == 0b000000000) {
-		Serial.print("Max Current Sense threshold is 10mV; ");
-	} else if ((ret & 0b00000111) == 0b000000001) {
-		Serial.print("Max Current Sense threshold is 20mV; ");
-	} else if ((ret & 0b00000111) == 0b000000010) {
-		Serial.print("Max Current Sense threshold is 30mV; ");
-	} else if ((ret & 0b00000111) == 0b000000011) {
-		Serial.print("Max Current Sense threshold is 40mV; ");
-	} else if ((ret & 0b00000111) == 0b000000100) {
-		Serial.print("Max Current Sense threshold is 50mV; ");
+	if (ret != 0xFF) {
+		if ((ret & 0b00000111) == 0b000000000) {
+			Serial.print("Max Current Sense threshold is 10mV; ");
+		} else if ((ret & 0b00000111) == 0b000000001) {
+			Serial.print("Max Current Sense threshold is 20mV; ");
+		} else if ((ret & 0b00000111) == 0b000000010) {
+			Serial.print("Max Current Sense threshold is 30mV; ");
+		} else if ((ret & 0b00000111) == 0b000000011) {
+			Serial.print("Max Current Sense threshold is 40mV; ");
+		} else if ((ret & 0b00000111) == 0b000000100) {
+			Serial.print("Max Current Sense threshold is 50mV; ");
+		}
+		if ((ret & 0b00011000) == 0b00000000) {
+			Serial.print("DRVcc is 5V; ");
+		} else if ((ret & 0b00011000) == 0b00001000) {
+			Serial.print("DRVcc is 8V; ");
+		} else if ((ret & 0b00011000) == 0b00010000) {
+			Serial.print("DRVcc is 10V; ");
+		}
+		if ((ret & 0b00100000) == 0b00100000) {
+			Serial.print("SETCUR set above 1.25V; ");
+		}
+		Serial.println(); 
 	}
-	if ((ret & 0b00011000) == 0b00000000) {
-		Serial.print("DRVcc is 5V; ");
-	} else if ((ret & 0b00011000) == 0b00001000) {
-		Serial.print("DRVcc is 8V; ");
-	} else if ((ret & 0b00011000) == 0b00010000) {
-		Serial.print("DRVcc is 10V; ");
-	}
-	if ((ret & 0b00100000) == 0b00100000) {
-		Serial.print("SETCUR set above 1.25V; ");
-	}
-	Serial.println();
 	return ret;
 }
 
 uint8_t LTC7871::getConfig2() {
 	uint8_t ret = readData(MFR_CONFIG2);
-	
-	if (ret & 0b00000001) {
-		Serial.print("In Buck mode; ");
-	} else {
-		Serial.print("In Boost mode; ");
+	if (ret != 0xFF) {
+		if (ret & 0b00000001) {
+			Serial.print("In Buck mode; ");
+		} else {
+			Serial.print("In Boost mode; ");
+		}
+		if (ret & 0b00000010) {
+			Serial.print("In Spread Spectrum mode; ");
+		}
+		if (ret & 0b00000100) {
+			Serial.print("In Hi-Z mode; ");
+		}
+		if (ret & 0b00001000) {
+			Serial.print("The controller is in DCM; ");
+		}
+		if (ret & 0b00010000) {
+			Serial.print("The controller is in burst mode operation; ");
+		}
+		Serial.println();
 	}
-	if (ret & 0b00000010) {
-		Serial.print("In Spread Spectrum mode; ");
-	}
-	if (ret & 0b00000100) {
-		Serial.print("In Hi-Z mode; ");
-	}
-	if (ret & 0b00001000) {
-		Serial.print("The controller is in DCM; ");
-	}
-	if (ret & 0b00010000) {
-		Serial.print("The controller is in burst mode operation; ");
-	}
-	Serial.println();
 	return ret;
 }
 
 uint8_t LTC7871::getChipCtrl() {
 	uint8_t ret = readData(MFR_CHIP_CTRL);
-	
-	if (ret & 0b00000001) {
-		Serial.print("Write inhibited; ");
-	} else {
-		Serial.print("Write allowed; ");
+	if (ret != 0xFF) {
+		if (ret & 0b00000001) {
+			Serial.print("Write inhibited; ");
+		} else {
+			Serial.print("Write allowed; ");
+		}
+		if (ret & 0b00000010) {
+			Serial.print("Reset all R/W registers; ");
+		}
+		if (ret & 0b00000100) {
+			Serial.print("A communication fault related to PEC during writing registers has occurred. Write 1 to this bit to clear the CML; ");
+		}
+		Serial.println();
 	}
-	if (ret & 0b00000010) {
-		Serial.print("Reset all R/W registers; ");
-	}
-	if (ret & 0b00000100) {
-		Serial.print("A communication fault related to PEC during writing registers has occurred. Write 1 to this bit to clear the CML; ");
-	}
-	Serial.println();
 	return ret;
 }
 
@@ -336,31 +343,33 @@ void LTC7871::setCur(uint8_t setPt) {
 uint8_t LTC7871::getSSFM() {
 	uint8_t ret = readData(MFR_SSFM);
 
-	if ((ret & 0b00000111) == 0b00000000 || (ret & 0b00000111) == 0b00000111) {
-		Serial.print("Sw. Freq / 512; ");
-	} else if ((ret & 0b00000111) == 0b00000001) {
-		Serial.print("Sw. Freq / 1024; ");
-	} else if ((ret & 0b00000111) == 0b00000010) {
-		Serial.print("Sw. Freq / 2048; ");
-	} else if ((ret & 0b00000111) == 0b00000011) {
-		Serial.print("Sw. Freq / 4096; ");
-	} else if ((ret & 0b00000111) == 0b00000100) {
-		Serial.print("Sw. Freq / 256; ");
-	} else if ((ret & 0b00000111) == 0b00000101) {
-		Serial.print("Sw. Freq / 128; ");
-	} else if ((ret & 0b00000111) == 0b00000110) {
-		Serial.print("Sw. Freq / 64; ");
+	if (ret != 0xFF) {
+		if ((ret & 0b00000111) == 0b00000000 || (ret & 0b00000111) == 0b00000111) {
+			Serial.print("Sw. Freq / 512; ");
+		} else if ((ret & 0b00000111) == 0b00000001) {
+			Serial.print("Sw. Freq / 1024; ");
+		} else if ((ret & 0b00000111) == 0b00000010) {
+			Serial.print("Sw. Freq / 2048; ");
+		} else if ((ret & 0b00000111) == 0b00000011) {
+			Serial.print("Sw. Freq / 4096; ");
+		} else if ((ret & 0b00000111) == 0b00000100) {
+			Serial.print("Sw. Freq / 256; ");
+		} else if ((ret & 0b00000111) == 0b00000101) {
+			Serial.print("Sw. Freq / 128; ");
+		} else if ((ret & 0b00000111) == 0b00000110) {
+			Serial.print("Sw. Freq / 64; ");
+		}
+		if ((ret & 0b00011000) == 0b00000000) {
+			Serial.print("±12%; ");
+		} else if ((ret & 0b00011000) == 0b00001000) {
+			Serial.print("±15%; ");
+		} else if ((ret & 0b00011000) == 0b00010010) {
+			Serial.print("±10%; ");
+		} else if ((ret & 0b00011000) == 0b00011000) {
+			Serial.print("±8%; ");
+		}
+		Serial.println();
 	}
-	if ((ret & 0b00011000) == 0b00000000) {
-		Serial.print("±12%; ");
-	} else if ((ret & 0b00011000) == 0b00001000) {
-		Serial.print("±15%; ");
-	} else if ((ret & 0b00011000) == 0b00010010) {
-		Serial.print("±10%; ");
-	} else if ((ret & 0b00011000) == 0b00011000) {
-		Serial.print("±8%; ");
-	}
-	Serial.println();
 	return ret;
 }
 
@@ -425,10 +434,16 @@ uint8_t LTC7871::readData(uint8_t reg) {
 	//Serial.print("Ret CRC: 0b"); Serial.println(CRC, BIN);
 
 	if (PEC((reg << 8) + retData) != CRC) {
-		Serial.print("CRC Mismatch: 0b"); Serial.println(PEC((reg << 8) + retData));
-	};
-
+		Serial.println("CRC Mismatch!");
+		Serial.print("Register: 0b"); Serial.println(reg,HEX);
+		Serial.print("Data Returned: 0b"); Serial.println(retData,BIN);
+		Serial.print("Expected CRC: 0b"); Serial.println(PEC((reg << 8) + retData),BIN);
+		Serial.print("Returned CRC: 0b"); Serial.println(CRC,BIN);
+		retData = 0xFF;
+	}
+	
 	return retData;
+
 /*
 Serial.print("Address: 0b");
  for(int i = 7; i >= 0; i--) {
